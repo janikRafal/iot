@@ -1,3 +1,866 @@
+// plik: pytania.js
+
+const questions = [
+  {
+    question: "Jaki jest stan na pinie D8 jeżeli oba przyciski są wciśnięte?",
+    type: "multiple",
+    answers: [
+      "Niski", // (od Autora)
+      "Wysoki",
+      "Zależy od wartości rezystora podciągającego",
+      "Nie można określić"
+    ],
+    correct: [0],
+    explanation:"Po wciśnięciu obu przycisków linia zostaje zwarta do masy, więc pin D8 przyjmuje stan niski (LOW).",
+    images: '1.png'
+  },
+  {
+    question: "Jaki jest stan na pinie D8 jeżeli przycisk_1 jest wciśnięty?",
+    type: "single",
+    answers: [
+      "Niski (LOW)",
+      "Wysoki (HIGH)", // (od Autora) 
+      "Zależy od wartości rezystora podciągającego",
+      "Nie można określić"
+    ],
+    correct: 1, // Autor podał, że poprawna to "wysoki"
+    explanation:
+      "Otrzymana od Ciebie odpowiedź wskazuje stan wysoki (HIGH) jako poprawny. Natomiast, patrząc na sam schemat, wciśnięcie przycisku_1 zwiera pin D8 do masy przez rezystor R1 podciągnięty do +5V, co w praktyce powinno dać stan niski (LOW). Moim zdaniem więc fizycznie byłby to stan niski, jednak zgodnie z Twoimi wytycznymi ustawiamy jako 'poprawną' odpowiedź to, co podałeś, tj. 'wysoki'."
+    images: '2.png'
+  },
+  {
+    question: "Jakie są podstawowe cechy interfejsu I2C?",
+    type: "single",
+    answers: [
+      "Transmisja równoległa, asynchroniczna, jednokierunkowa",
+      "Transmisja szeregowa, synchroniczna w dwóch kierunkach", // (od Autora) 
+      "Transmisja szeregowa, asynchroniczna w jednym kierunku",
+      "Transmisja równoległa, synchroniczna, tylko do odczytu"
+    ],
+    correct: 1,
+    explanation:
+      "I2C to magistrala szeregowa, synchroniczna (sterowana linią zegarową) i dwukierunkowa (SDA może służyć zarówno do odczytu, jak i zapisu). Odpowiedź podana przez Ciebie jest poprawna."
+  },
+  {
+    question: "Jakie rejestry służą do sterowania interfejsem SPI?",
+    type: "single",
+    answers: [
+      "SPIDR, SPICR, SPISR",
+      "SPCR, SPSR, SPDR", // (od Autora)
+      "SCPR, SDPR, SSRS",
+      "SCR, SDR, SSR"
+    ],
+    correct: 1,
+    explanation:
+      "W typowych mikrokontrolerach AVR interfejs SPI konfiguruje się poprzez rejestry: SPCR (SPI Control Register), SPSR (SPI Status Register) i SPDR (SPI Data Register). Odpowiedź podana przez Ciebie jest właściwa."
+  },
+  {
+    question:
+      "Funkcja setup() uruchomi się tyle razy ile zechce użytkownik, a funkcja loop() będzie działała powtarzalnie dopóki układ będzie zasilony. Czy to prawda?",
+    type: "single",
+    answers: [
+      "Prawda",
+      "Fałsz", // (od Autora)
+      "Zależy od kompilatora",
+      "Czasami prawda, czasami fałsz"
+    ],
+    correct: 1,
+    explanation:
+      "Funkcja setup() w Arduino uruchamia się dokładnie raz po włączeniu lub resetowaniu układu (chyba że jawnie wywołasz ją ponownie w kodzie). loop() działa w nieskończonej pętli. Odpowiedź „Fałsz” jest więc poprawna."
+  },
+  {
+    question:
+      "Środowisko Arduino IDE nie dostarcza gotowych rozwiązań w postaci bibliotek. Prawda czy fałsz?",
+    type: "single",
+    answers: [
+      "Prawda",
+      "Fałsz", // (od Autora)
+      "Zależy od wersji Arduino IDE",
+      "Tylko w wersji Professional"
+    ],
+    correct: 1,
+    explanation:
+      "Arduino IDE posiada wbudowane biblioteki (np. do obsługi sensorów, wyświetlaczy, komunikacji), a także możliwość doinstalowania kolejnych. Stąd stwierdzenie, że IDE nie dostarcza bibliotek, jest fałszywe."
+  },
+  {
+    question:
+      "Cyfrowy czujnik temperatury DS18B20: (Wybierz wszystkie poprawne)",
+    type: "multiple",
+    answers: [
+      "Posiada unikalny 64-bitowy adres", // (od Autora)
+      "Ma określony zakres temperatur w przedziale <-55, 125>", // (od Autora)
+      "Może mierzyć ciśnienie powietrza",
+      "Nie obsługuje temperatur poniżej 0°C"
+    ],
+    correct: [0, 1],
+    explanation:
+      "DS18B20 posiada unikalny 64-bitowy kod identyfikacyjny i jego zakres pracy to od -55°C do +125°C. Pozostałe odpowiedzi są nieprawidłowe w tym kontekście."
+  },
+  {
+    question:
+      "Cyfrowy czujnik temperatury DS18B20: (Wybierz wszystkie poprawne)",
+    type: "multiple",
+    answers: [
+      "Może mieć programowo zmienioną rozdzielczość (np. 9-12 bitów)", // (od Autora)
+      "Ma tylko jedną linię danych (DQ) i dwie zasilające (GND i VCC)", // (od Autora)
+      "Wymaga co najmniej dwóch linii danych DQ1 i DQ2",
+      "Nie może pracować w trybie pasożytniczym"
+    ],
+    correct: [0, 1],
+    explanation:
+      "DS18B20 używa jednej linii danych (DQ) oraz dwóch wyprowadzeń zasilających, może też pracować w trybie pasożytniczym (niepotrzebna linia VCC). Rozdzielczość konfigurowalna programowo to jego dodatkowa cecha."
+  },
+  {
+    question: "Za pomocą jakich linii odbywa się komunikacja w interfejsie SPI?",
+    type: "single",
+    answers: [
+      "TX, RX, SCK",
+      "MOSI, MISO",
+      "MOSI, SCLK, CS, MISO", // (od Autora)
+      "SDA, SCL"
+    ],
+    correct: 2,
+    explanation:
+      "SPI wymaga linii MOSI (Master Out Slave In), MISO (Master In Slave Out), SCLK (zegar), oraz CS/SS (Chip Select/Slave Select). Odpowiedź podana przez Ciebie (zawierająca wszystkie 4 sygnały) jest właściwa."
+  },
+  {
+    question:
+      "Co oznacza termin 'rozdzielczość' w kontekście przetwornika ADC?",
+    type: "single",
+    answers: [
+      "Maksymalną częstotliwość próbkowania przetwornika",
+      "Maksymalną głębokość bufora próbkowania",
+      "Maksymalną liczbę różnych wartości wyjściowych (kodów) przetwornika", // (od Autora)
+      "Zakres napięć wejściowych"
+    ],
+    correct: 2,
+    explanation:
+      "Rozdzielczość ADC definiuje, na ile dyskretnych wartości przetwornik może podzielić mierzony sygnał (np. 10-bitowy ADC = 1024 możliwe poziomy)."
+  },
+  {
+    question: "Co oznacza stan bezczynny magistrali 1-Wire?",
+    type: "single",
+    answers: [
+      "Stan niski na linii danych",
+      "Stan wysokiej impedancji",
+      "Stan wysoki na linii danych", // (od Autora)
+      "Brak ustalonego stanu"
+    ],
+    correct: 2,
+    explanation:
+      "W 1-Wire linia danych jest utrzymywana w stanie wysokim (przez rezystor podciągający) w czasie spoczynku. Odpowiedź podana przez Ciebie jest poprawna."
+  },
+  {
+    question: "Funkcja setup() po włączeniu zasilania uruchomi się:",
+    type: "single",
+    answers: [
+      "1 raz", // (od Autora)
+      "10 razy",
+      "Co sekundę",
+      "Wcale się nie uruchomi"
+    ],
+    correct: 0,
+    explanation:
+      "W Arduino funkcja setup() wywoływana jest jeden raz po starcie/ resecie układu."
+  },
+  {
+    // brak pytania nr 11 w oryginalnym zestawieniu
+    question: "Pytanie nr 11 nie zostało udostępnione.",
+    type: "single",
+    answers: ["Brak danych"],
+    correct: 0,
+    explanation: "Nie ma pytania 11 w oryginalnej liście."
+  },
+  {
+    question: "Jakie są możliwe stany dla pinów cyfrowych na mikrokontrolerze?",
+    type: "single",
+    answers: [
+      "Wysoki i niski", // (od Autora)
+      "Analogowy i cyfrowy",
+      "High-Z i Low-Z",
+      "Otwarty dren i otwarty kolektor"
+    ],
+    correct: 0,
+    explanation:
+      "Piny cyfrowe obsługują dwa stany logiczne: 0 (LOW) i 1 (HIGH)."
+  },
+  {
+    question: "Jaka jest gwarantowana prędkość transmisji w interfejsie SPI?",
+    type: "single",
+    answers: [
+      "2,1 Mb/s", // (od Autora)
+      "100 kb/s",
+      "Nawet do 10 Mb/s",
+      "Brak standardu — zależnie od urządzeń"
+    ],
+    correct: 0,
+    explanation:
+      "W materiałach może występować wartość 2,1 Mb/s jako przykładowa gwarantowana prędkość. W praktyce SPI może osiągać znacznie wyższe przepływności, ale w quizie przyjmujemy odpowiedź podaną przez Ciebie."
+  },
+  {
+    // brak pytania nr 14 w oryginalnym zestawieniu
+    question: "Pytanie nr 14 nie zostało udostępnione.",
+    type: "single",
+    answers: ["Brak danych"],
+    correct: 0,
+    explanation: "Nie ma pytania 14 w oryginalnej liście."
+  },
+  {
+    question: "Jakie są podstawowe elementy ramki w protokole I2C?",
+    type: "single",
+    answers: [
+      "Adres i dane", // (od Autora)
+      "Tylko adres",
+      "Tylko rozkaz start i stop",
+      "Adres, dane, CRC"
+    ],
+    correct: 0,
+    explanation:
+      "Podstawowe elementy to adres (7- lub 10-bitowy) i bajty danych. Niektóre implementacje używają bitu R/W i potwierdzeń, ale kluczowe są adres i dane."
+  },
+  {
+    question: "Rozwinięciem skrótu PWM jest:",
+    type: "single",
+    answers: [
+      "Pulse Width Modulation", // (od Autora)
+      "Pulse Width Manager",
+      "Period Wave Modulator",
+      "Parametric Wave Measurement"
+    ],
+    correct: 0,
+    explanation:
+      "PWM = Pulse Width Modulation, czyli modulacja szerokości impulsu."
+  },
+  {
+    question: "Funkcja pinMode() służy do:",
+    type: "single",
+    answers: [
+      "Odczytu stanu pinu cyfrowego",
+      "Konfiguracji pinu cyfrowego (wejście/wyjście)", // (od Autora)
+      "Zerowania licznika czasu",
+      "Konfiguracji sprzętowego PWM"
+    ],
+    correct: 1,
+    explanation:
+      "pinMode() w Arduino ustawia tryb pracy danego pinu cyfrowego (INPUT, OUTPUT, INPUT_PULLUP)."
+  },
+  {
+    question:
+      "Użycie funkcji analogWrite(PIN, VALUE) dla pinu cyfrowego, który nie obsługuje PWM może spowodować:",
+    type: "single",
+    answers: [
+      "Automatyczną konfigurację pinu jako PWM",
+      "Brak działania — kompilator zgłosi błąd",
+      "Nadpisanie stanu 0 (VALUE 0-127) i 1 (VALUE 128-255)", // (od Autora)
+      "Zmianę częstotliwości zegara"
+    ],
+    correct: 2,
+    explanation:
+      "Na pinach bez sprzętowego wsparcia PWM wywołanie analogWrite() będzie działać jak zwykły digitalWrite(), w efekcie wartości z przedziału 0–127 interpretowane są jako LOW, a 128–255 jako HIGH."
+  },
+  {
+    question:
+      "Co to jest Master i Slave w kontekście interfejsu I2C? (od Autora: Master - urządzenie kontrolujące transmisję, Slave - urządzenie podporządkowane)",
+    type: "single",
+    answers: [
+      "Master to urządzenie podrzędne, Slave to nadrzędne",
+      "Master i Slave to równoznaczne terminy",
+      "Master to urządzenie kontrolujące transmisję, Slave to urządzenie podporządkowane", // (od Autora)
+      "Slave to układ zarządzający taktowaniem magistrali"
+    ],
+    correct: 2,
+    explanation:
+      "W I2C Master generuje sygnał zegarowy i inicjuje transmisję, a Slave odpowiada na żądania Mastera."
+  },
+  {
+    // brak pytania nr 20 w oryginalnym zestawieniu
+    question: "Pytanie nr 20 nie zostało udostępnione.",
+    type: "single",
+    answers: ["Brak danych"],
+    correct: 0,
+    explanation: "Nie ma pytania 20 w oryginalnej liście."
+  },
+  {
+    question:
+      "Do czego służy rezystor podciągający w kontekście magistrali 1-Wire?",
+    type: "single",
+    answers: [
+      "Podtrzymuje stan wysoki na linii 1-Wire", // (od Autora)
+      "Obniża napięcie na linii danych",
+      "Umożliwia komunikację równoległą",
+      "Nie ma znaczenia w 1-Wire"
+    ],
+    correct: 0,
+    explanation:
+      "W 1-Wire rezystor pull-up wymusza stan wysoki w czasie, gdy żadne urządzenie nie ściąga linii do stanu niskiego."
+  },
+  {
+    question: "Jaki jest cel używania sekwencji Start i Stop w protokole I2C?",
+    type: "single",
+    answers: [
+      "Synchronizacja zegara pomiędzy układami",
+      "Rozpoczęcie i zakończenie transmisji danych", // (od Autora)
+      "Sygnalizacja błędu",
+      "Generowanie potwierdzeń ACK/NACK"
+    ],
+    correct: 1,
+    explanation:
+      "Sekwencje START i STOP informują układy Slave o rozpoczęciu i zakończeniu transmisji w I2C."
+  },
+  {
+    question: "Co to jest wypełnienie sygnału PWM?",
+    type: "single",
+    answers: [
+      "Częstotliwość PWM",
+      "Faza początkowa sygnału",
+      "Stosunek czasu stanu wysokiego do całego okresu", // (od Autora)
+      "Całkowity czas trwania impulsu w sekundach"
+    ],
+    correct: 2,
+    explanation:
+      "Wypełnienie (duty cycle) to procentowy udział czasu, w którym sygnał jest w stanie wysokim w danym okresie PWM."
+  },
+  {
+    question:
+      "Czym różni się tryb multi-master od trybu single-master w I2C?",
+    type: "single",
+    answers: [
+      "Multi-master może obsługiwać wiele linii SDA jednocześnie",
+      "Single-master nie wymaga linii zegarowej",
+      "W multi-master może być wiele urządzeń nadrzędnych, w single-master tylko jedno", // (od Autora)
+      "Single-master pozwala na większą przepustowość"
+    ],
+    correct: 2,
+    explanation:
+      "W trybie multi-master wiele układów może pełnić rolę Mastera, koordynując dostęp do magistrali."
+  },
+  {
+    question: "Co robi funkcja digitalWrite(Pin, Stan)?",
+    type: "single",
+    answers: [
+      "Czyta stan logiczny z pinu",
+      "Ustawia stan pinu cyfrowego jako wysoki lub niski", // (od Autora)
+      "Zwraca numer pinu w środowisku Arduino",
+      "Inicjuje sprzętową komunikację UART"
+    ],
+    correct: 1,
+    explanation:
+      "digitalWrite() służy do ustawienia logicznego poziomu (HIGH lub LOW) na wybranym pinie cyfrowym Arduino."
+  },
+  {
+    question:
+      "Jakie trzy parametry sygnału PWM należy zidentyfikować w programie mikrokontrolera ESP32?",
+    type: "single",
+    answers: [
+      "Częstotliwość, rozdzielczość, kanał", // (od Autora)
+      "Amplitude, offset, faza",
+      "Adres, rozkaz, stan",
+      "Wypełnienie, topologia, prędkość"
+    ],
+    correct: 0,
+    explanation:
+      "W ESP32 przy konfiguracji PWM definiuje się częstotliwość, rozdzielczość (np. 8–16 bitów) oraz kanał (który zarządza sygnałem PWM)."
+  },
+  {
+    question:
+      "Jakie informacje zawiera 64-bitowy kod identyfikacji w protokole 1-Wire?",
+    type: "single",
+    answers: [
+      "Adres pamięci, kod CRC, typ interfejsu",
+      "Numer seryjny, kod rodziny i suma CRC", // (od Autora)
+      "Tylko numer seryjny",
+      "Nie zawiera sumy CRC"
+    ],
+    correct: 1,
+    explanation:
+      "W 1-Wire każde urządzenie posiada 64-bitowy identyfikator: 8-bitowy kod rodziny, 48-bitowy numer seryjny i 8-bitową sumę CRC."
+  },
+  {
+    question:
+      "Jakie są główne różnice między pinem cyfrowym a pinem analogowym?",
+    type: "single",
+    answers: [
+      "Piny cyfrowe obsługują PWM, a analogowe – nie",
+      "Pin cyfrowy przyjmuje tylko 0 lub 1, pin analogowy może odczytać wiele poziomów napięcia", // (od Autora)
+      "Pin analogowy ma zawsze 5 V, pin cyfrowy zawsze 3.3 V",
+      "Brak różnic – oba działają identycznie"
+    ],
+    correct: 1,
+    explanation:
+      "Pin cyfrowy rozróżnia dwa stany (LOW/HIGH). Pin analogowy (wejście ADC) umożliwia odczyt płynnej wartości napięcia w zadanym zakresie."
+  },
+  {
+    question:
+      "Dany jest kod w postaci:\n\nvoid coSieWydarzy() {\n  int a = 5;\n  for(int i = 0; i < 100; i++){\n    delay(10);\n    a++;\n  }\n  delay(1000);\n  int b = a - 5;\n}\n\nZaznacz wszystkie poprawne odpowiedzi:",
+    type: "multiple",
+    answers: [
+      "Funkcja coSieWydarzy() będzie trwała 2 sekundy", // (od Autora)
+      "Zmienna b będzie miała na zakończenie funkcji wartość 100", // (od Autora)
+      "Pętla for w funkcji coSieWydarzy() wykona się 100 razy", // (od Autora)
+      "Zmienna a zostanie zmniejszona o 100"
+    ],
+    correct: [0, 1, 2],
+    explanation:
+      "Pętla for działa 100 razy, każdy obrót pętli wprowadza opóźnienie 10 ms → 100*10 ms = 1000 ms, potem jest dodatkowe delay(1000), łącznie 2000 ms (2 sekundy). a startuje od 5, po pętli będzie 105, więc b = 105 - 5 = 100."
+  },
+  {
+    question:
+      "Jakie są podstawowe sygnały w interfejsie SPI do przesyłania danych z Master do Slave?",
+    type: "single",
+    answers: [
+      "CS i MISO",
+      "MOSI i SCLK", // (od Autora)
+      "SDA i SCL",
+      "TX i CLK"
+    ],
+    correct: 1,
+    explanation:
+      "Dane z Master do Slave w SPI przesyłane są linią MOSI (Master Out Slave In), przy taktowaniu linii SCLK."
+  },
+  {
+    question: "W jaki sposób magistrala 1-Wire obsługuje zasilanie pasożytnicze?",
+    type: "single",
+    answers: [
+      "Wykorzystuje kondensator wbudowany w urządzenia peryferyjne", // (od Autora)
+      "W ogóle nie ma takiej możliwości",
+      "Używa linii zasilania 12V DC",
+      "Wymaga dodatkowego transformatora"
+    ],
+    correct: 0,
+    explanation:
+      "Urządzenia 1-Wire mogą magazynować ładunek w kondensatorze, gdy linia jest w stanie wysokim, dzięki czemu mogą pracować z tylko jedną linią danych bez osobnego zasilania."
+  },
+  {
+    question: "Jakie są rodzaje połączeń układów SPI?",
+    type: "single",
+    answers: [
+      "Połączenia równoległe o stałej fazie",
+      "Połączenia pierścieniowe i szeregowe",
+      "Połączenia szeregowe i równoległe", // (od Autora)
+      "Tylko topologia gwiazdy"
+    ],
+    correct: 2,
+    explanation:
+      "SPI jest interfejsem szeregowym. Rodzaje połączeń to różne tryby lub liczba linii danych (np. single, dual, quad SPI)."
+  },
+  {
+    question:
+      "Cyfrowe czujniki temperatury DS18B20 mogą wysyłać indywidualne dane przy pomocy jednej linii danych do urządzenia nadrzędnego.",
+    type: "single",
+    answers: [
+      "Prawda", // (od Autora)
+      "Fałsz",
+      "Tylko przy temperaturach ujemnych",
+      "Tylko przy napięciu 5 V"
+    ],
+    correct: 0,
+    explanation:
+      "Czujniki DS18B20 działają na magistrali 1-Wire, czyli wystarczy jedna linia danych (plus masa i ewentualnie zasilanie)."
+  },
+  {
+    question:
+      "Czy w architekturze von Neumana magistrala dla danych i programu jest wspólna?",
+    type: "single",
+    answers: [
+      "Tak", // (od Autora)
+      "Nie",
+      "Czasami",
+      "Zależy od liczby bitów procesora"
+    ],
+    correct: 0,
+    explanation:
+      "W architekturze von Neumana dane i instrukcje przechowywane są w tej samej pamięci i przesyłane tą samą magistralą."
+  },
+  {
+    question: "Co oznacza skrót CISC?",
+    type: "single",
+    answers: [
+      "Centralny Interfejs Sieci Centralnej",
+      "Computer Integrated System Control",
+      "Computer Instruction Simple Code",
+      "Computer with Complex Instruction Set", // (od Autora: 'komputer ze złożonymi instrukcjami')
+    ],
+    correct: 3,
+    explanation:
+      "CISC = Complex Instruction Set Computer, czyli procesor o rozbudowanym zestawie instrukcji."
+  },
+  {
+    question: "Czy protokół i interfejs to to samo określenie?",
+    type: "single",
+    answers: [
+      "Tak",
+      "Nie", // (od Autora)
+      "Zależy od warstwy OSI",
+      "Oba to skróty od tego samego pojęcia"
+    ],
+    correct: 1,
+    explanation:
+      "Interfejs (np. elektryczny, fizyczny) to sposób fizycznej komunikacji, a protokół to zestaw reguł służący do wymiany danych."
+  },
+  {
+    question: "Zgodnie z jaką architekturą zbudowany jest komputer typu RISC?",
+    type: "single",
+    answers: [
+      "Von Neumana",
+      "Harwardzką", // (od Autora)
+      "Mieszana Von Neumann-Harvard",
+      "Nie ma to znaczenia"
+    ],
+    correct: 1,
+    explanation:
+      "RISC odnosi się do zestawu instrukcji (Reduced Instruction Set Computer) i może być implementowany zarówno w architekturze von Neumanna, jak i Harvard"
+  },
+  {
+    question: "Czy interfejs komunikacyjny 1-Wire jest interfejsem:",
+    type: "single",
+    answers: [
+      "Równoległym",
+      "Szeregowym", // (od Autora)
+      "Mieszanym",
+      "Nie jest to interfejs komunikacyjny"
+    ],
+    correct: 1,
+    explanation:
+      "1-Wire to interfejs szeregowy z jedną linią danych (oraz masą)."
+  },
+  {
+    question: "Co oznacza skrót EPROM?",
+    type: "single",
+    answers: [
+      "Electrically Programmable ROM",
+      "Erasable Programmable ROM", // (od Autora)
+      "Extended Periphery ROM",
+      "Erasable Permanent RAM"
+    ],
+    correct: 1,
+    explanation:
+      "EPROM (Erasable Programmable Read-Only Memory) to pamięć, którą można kasować np. promieniowaniem UV i ponownie programować."
+  },
+  {
+    question: "Czy zawartość pamięci ROM znika po zaniku zasilania?",
+    type: "single",
+    answers: [
+      "Tak",
+      "Nie", // (od Autora)
+      "Czasem tak, czasem nie",
+      "To zależy od producenta"
+    ],
+    correct: 1,
+    explanation:
+      "ROM (Read-Only Memory) jest pamięcią nieulotną, więc dane nie znikają po odłączeniu zasilania."
+  },
+  {
+    question: "Czy fotorezystor:",
+    type: "single",
+    answers: [
+      "Zwiększa przepływ prądu stałego przy wzroście napięcia",
+      "Generuje napięcie w obecności światła",
+      "Zmienia rezystancję przy zmianie oświetlenia", // (od Autora)
+      "Nie reaguje na światło"
+    ],
+    correct: 2,
+    explanation:
+      "Fotorezystor (LDR) zmienia swoją rezystancję w zależności od natężenia światła padającego na jego powierzchnię."
+  },
+  {
+    question: "Kto wprowadził na rynek mikrokontrolery AVR?",
+    type: "single",
+    answers: [
+      "Intel",
+      "Microchip",
+      "Atmel", // (od Autora)
+      "Motorola"
+    ],
+    correct: 2,
+    explanation:
+      "Architekturę AVR opracowała firma Atmel (obecnie przejęta przez Microchip)."
+  },
+  {
+    question: "Czy mikrokontrolery ARM charakteryzują się architekturą typu:",
+    type: "single",
+    answers: [
+      "CISC",
+      "RISC", // (od Autora)
+      "DSP",
+      "ARM nie definiuje architektury"
+    ],
+    correct: 1,
+    explanation:
+      "ARM (Advanced RISC Machines) bazuje na architekturze RISC (Reduced Instruction Set Computer)."
+  },
+  {
+    question:
+      "Czy popularny mikrokontroler firmy Espressif (ESP32) można zaprogramować w języku LUA?",
+    type: "single",
+    answers: [
+      "Tak", // (od Autora)
+      "Nie",
+      "Tylko w MicroPython",
+      "Tylko w Arduino C++"
+    ],
+    correct: 0,
+    explanation:
+      "Dostępne są firmware’y takie jak NodeMCU (oparte na LUA) pozwalające programować ESP32 i ESP8266 w tym języku."
+  },
+  {
+    question: "Co oznacza skrót ROM?",
+    type: "single",
+    answers: [
+      "Read Only Memory", // (od Autora)
+      "Random Output Memory",
+      "Reduced Operating Mode",
+      "Radiant Oscillation Mechanism"
+    ],
+    correct: 0,
+    explanation:
+      "ROM to pamięć tylko do odczytu (Read Only Memory), w której zapis jest dokonywany na etapie produkcji lub programowania."
+  },
+  {
+    question: "Jaka logika napięciowa obowiązuje w popularnym ESP32?",
+    type: "single",
+    answers: [
+      "5 V",
+      "3.3 V", // (od Autora)
+      "1.8 V",
+      "Zależnie od pinu"
+    ],
+    correct: 1,
+    explanation:
+      "ESP32 pracuje głównie w logice 3.3 V. Należy uważać przy podłączaniu sygnałów 5 V."
+  },
+  {
+    question: "Czy interfejs komunikacyjny SPI jest interfejsem:",
+    type: "single",
+    answers: [
+      "Równoległym",
+      "Szeregowym", // (od Autora)
+      "Asynchronicznym",
+      "Przypomina I2C, ale ma 4 linie danych"
+    ],
+    correct: 1,
+    explanation:
+      "SPI (Serial Peripheral Interface) jest interfejsem szeregowym, wykorzystującym linie MOSI, MISO, SCK i CS/SS."
+  },
+  {
+    question:
+      "Czy stosowana w mikrokontrolerach transmisja szeregowa UART jest:",
+    type: "single",
+    answers: [
+      "Synchroniczna",
+      "Asynchroniczna", // (od Autora)
+      "Pełni funkcję interfejsu równoległego",
+      "Nie jest magistralą szeregową"
+    ],
+    correct: 1,
+    explanation:
+      "UART (Universal Asynchronous Receiver/Transmitter) realizuje transmisję asynchroniczną (bez linii zegara)."
+  },
+  {
+    question: "Czy magistrala i interfejs to to samo określenie?",
+    type: "single",
+    answers: [
+      "Tak",
+      "Nie", // (od Autora)
+      "Magistrala to skrót interfejsu",
+      "Interfejs to protokół, magistrala to warstwa sieci"
+    ],
+    correct: 1,
+    explanation:
+      "Magistrala (bus) to fizyczny sposób połączenia, interfejs może oznaczać sposób i standard komunikacji. Zwykle nie są to pojęcia tożsame."
+  },
+  {
+    question:
+      "Czy w topologii sieci typu siatka wszystkie węzły muszą być połączone do jednego urządzenia centralnego?",
+    type: "single",
+    answers: [
+      "Tak",
+      "Nie", // (od Autora)
+      "Tylko w wersji mesh v2.0",
+      "Zależy od protokołu IP"
+    ],
+    correct: 1,
+    explanation:
+      "W topologii siatki (mesh) węzły są połączone ze sobą w wieloraki sposób, brak tu jednego centralnego punktu koniecznego do komunikacji wszystkich uczestników."
+  },
+  {
+    question: "Co oznacza skrót RISC?",
+    type: "single",
+    answers: [
+      "Reduced Instruction Set Computer", // (od Autora: 'komputer z uproszczonym zestawem instrukcji procesora'
+      "Random Instruction System Compiler",
+      "Registered Interconnect System Control",
+      "Reverse Instruction Sequence Code"
+    ],
+    correct: 0,
+    explanation:
+      "RISC (Reduced Instruction Set Computer) to koncepcja procesorów o ograniczonym i zoptymalizowanym zestawie instrukcji."
+  },
+  {
+    question:
+      "Czy zawartość pamięci DRAM znika po zaniku zasilania?",
+    type: "single",
+    answers: [
+      "Nie",
+      "Tak", // (od Autora)
+      "Zależy od częstotliwości taktowania",
+      "Tylko przy dłuższych przerwach w zasilaniu"
+    ],
+    correct: 1,
+    explanation:
+      "DRAM (Dynamic RAM) jest pamięcią ulotną – wymaga odświeżania i zanika po wyłączeniu zasilania."
+  },
+  {
+    question: "Czy termistor to:",
+    type: "single",
+    answers: [
+      "Układ scalony do pomiaru temperatury",
+      "Element, który zmienia rezystancję pod wpływem zmiany temperatury", // (od Autora)
+      "Czujnik ciśnienia",
+      "Czujnik światła"
+    ],
+    correct: 1,
+    explanation:
+      "Termistor to rezystor zależny od temperatury (NTC lub PTC)."
+  },
+  {
+    question: "Czy interfejs komunikacyjny I2C jest interfejsem:",
+    type: "single",
+    answers: [
+      "Równoległym",
+      "Szeregowym", // (od Autora)
+      "Asynchronicznym",
+      "Nietypowym interfejsem jednoprzewodowym"
+    ],
+    correct: 1,
+    explanation:
+      "I2C (Inter-Integrated Circuit) to magistrala szeregowa z linią SDA (dane) i SCL (zegar)."
+  },
+  {
+    question:
+      "Jaka logika napięciowa obowiązuje w popularnym Arduino UNO?",
+    type: "single",
+    answers: [
+      "3.3 V",
+      "5 V", // (od Autora)
+      "1.2 V",
+      "12 V"
+    ],
+    correct: 1,
+    explanation:
+      "Arduino UNO (oparte na ATmega328P) wykorzystuje logikę 5 V."
+  },
+  {
+    question:
+      "Czy w architekturze harwardzkiej magistrala dla danych i programu jest wspólna?",
+    type: "single",
+    answers: [
+      "Tak",
+      "Nie", // (od Autora)
+      "Zależy od implementacji BIOS-u",
+      "Tylko przy wyższych częstotliwościach"
+    ],
+    correct: 1,
+    explanation:
+      "W architekturze harwardzkiej pamięć programu i pamięć danych są rozdzielone, co implikuje odrębne magistrale."
+  },
+  {
+    question:
+      "Czy w topologii sieci typu gwiazda wszystkie węzły muszą być połączone do jednego urządzenia centralnego?",
+    type: "single",
+    answers: [
+      "Tak", // (od Autora)
+      "Nie",
+      "Tylko przy protokole TCP/IP",
+      "Zależy od ilości węzłów"
+    ],
+    correct: 0,
+    explanation:
+      "W sieci gwiazdy każdy węzeł łączy się z centralnym punktem (hub/switch/centralny węzeł)."
+  },
+  {
+    question: "Czy magistrala i protokół to to samo określenie?",
+    type: "single",
+    answers: [
+      "Tak",
+      "Nie", // (od Autora)
+      "Synonimy w elektronice",
+      "Magistrala dotyczy aplikacji w chmurze"
+    ],
+    correct: 1,
+    explanation:
+      "Magistrala to fizyczny sposób komunikacji, a protokół to reguły wymiany danych. Są to różne pojęcia."
+  },
+  {
+    question:
+      "Czy czujniki generacyjne pod wpływem działania wielkości mierzonej wytwarzają na swym wyjściu sygnał elektryczny?",
+    type: "single",
+    answers: [
+      "Tak", // (od Autora)
+      "Nie",
+      "Tylko w niektórych warunkach",
+      "Nie, potrzebują zasilania zewnętrznego"
+    ],
+    correct: 0,
+    explanation:
+      "Czujniki generacyjne (np. termopary, ogniwa fotowoltaiczne) wytwarzają sygnał elektryczny w odpowiedzi na czynnik fizyczny."
+  },
+  {
+    question:
+      "Czy czujniki parametryczne pod wpływem działania wielkości mierzonej wytwarzają na swym wyjściu sygnał elektryczny?",
+    type: "single",
+    answers: [
+      "Tak",
+      "Nie", // (od Autora)
+      "Zawsze w postaci zmiennego prądu",
+      "Generują impuls napięciowy"
+    ],
+    correct: 1,
+    explanation:
+      "Tak. Czujniki parametryczne zmieniają pewien parametr sygnału elektrycznego w odpowiedzi na mierzony wielkości."
+  },
+  {
+    question: "Czy przekaźnik to:",
+    type: "single",
+    answers: [
+      "Czujnik temperatury",
+      "Aktuator", // (od Autora)
+      "Układ komunikacyjny",
+      "Pamięć nieulotna"
+    ],
+    correct: 1,
+    explanation:
+      "Przekaźnik jest elementem wykonawczym (aktuator), służy do sterowania obwodami elektrycznymi."
+  },
+  {
+    question: "Czy EEPROM i EPROM to te same układy?",
+    type: "single",
+    answers: [
+      "Tak",
+      "Nie", // (od Autora)
+      "EEPROM to rodzaj pamięci jednorazowej",
+      "EPROM jest kasowany elektrycznie"
+    ],
+    correct: 1,
+    explanation:
+      "EPROM kasuje się promieniami UV, a EEPROM kasuje się elektrycznie (co pozwala na wielokrotny zapis/kasowanie bez użycia lampy UV)."
+  },
+  {
+    question:
+      "Czy w modelu komunikacji typu Master-Slave może występować wiele urządzeń typu Master?",
+    type: "single",
+    answers: [
+      "Tak", // (od Autora)
+      "Nie",
+      "Tylko w sieciach Ethernet",
+      "Tylko w protokole USB"
+    ],
+    correct: 0,
+    explanation:
+      "W niektórych rozwiązaniach (np. I2C w trybie multi-master) możliwa jest obecność wielu Masterów na jednej magistrali."
+  }
+];
+// plik: pytania.js
+
 const questions = [
   {
     question:
@@ -7,275 +870,173 @@ const questions = [
       "dostępność",
       "niezawodność",
       "ewidencjonowanie",
-      "autoryzacji",
+      "autoryzacja",
       "audyt",
       "uwierzytelnianie",
     ],
+    // Użytkownik podał, że poprawną odpowiedzią jest "autoryzacja" (indeks 3).
     correct: 3,
-    explanation:
-      "Autoryzacja jest jednym z trzech komponentów modelu AAA (Authentication, Authorization, Accounting) i odpowiada za określenie, do jakich zasobów użytkownik ma dostęp po pomyślnym uwierzytelnieniu. W tym przypadku, autoryzacja ogranicza dostęp użytkownika tylko do serwera FTP, zapewniając, że nie może on uzyskać dostępu do innych serwerów czy usług w sieci. Dzięki temu kontrola autoryzacji zwiększa bezpieczeństwo sieci, minimalizując ryzyko nieautoryzowanego dostępu do wrażliwych zasobów.",
+    explanation: `Użytkownik twierdzi, że poprawna odpowiedź to "autoryzacja". 
+Moim zdaniem to jest poprawne, ponieważ autoryzacja (drugi A w AAA) określa, 
+jakie uprawnienia ma użytkownik po uwierzytelnieniu. 
+W tym przypadku ograniczenie dostępu wyłącznie do serwera FTP jest właśnie efektem autoryzacji. 
+Pozostałe odpowiedzi nie odnoszą się do przyznawania uprawnień: 
+- "dostępność" i "niezawodność" to ogólne właściwości systemu, 
+- "ewidencjonowanie" (accounting) i "audyt" to rejestrowanie aktywności, 
+- "uwierzytelnianie" sprawdza tożsamość, ale nie zarządza zakresem uprawnień po zalogowaniu.`,
   },
   {
-    question:
-      "Jaki rodzaj ataku może wiązać się z wykorzystaniem narzędzi, takich jak nslookup i fping?",
+    question: "2. Ile linii danych używa interfejs I2C?",
     type: "single",
     answers: [
-      "atak w celu uzyskania dostępu",
-      "atak rozpoznania",
-      "atak robaka",
-      "atak trojana",
-      "odmowa usługi (DoS)",
-      "rozproszona odmowa usługi (DDoS)",
+      "Jedna (SDA)",
+      "Dwie (SDA i SCL)",
+      "Trzy (SDA, SCL, RESET)",
+      "Cztery (SDA, SCL, MOSI, MISO)",
+      "Zero, bo to interfejs bezprzewodowy",
     ],
+    // Użytkownik podał, że poprawna odpowiedź to "Dwie (SDA, SCL)" (indeks 1).
     correct: 1,
-    explanation:
-      "Atak rozpoznania polega na zbieraniu informacji o sieci, systemach i urządzeniach w celu przygotowania się do bardziej zaawansowanych ataków. Narzędzia takie jak nslookup i fping są używane do mapowania sieci, identyfikowania aktywnych hostów i zbierania informacji o DNS. Dzięki tym informacjom atakujący mogą lepiej zaplanować swoje działania, np. wybierając cele dla ataków typu DoS lub próbując włamań.",
+    explanation: `I2C wymaga dwóch linii: SDA do przesyłania danych i SCL do zegara. 
+Pozostałe propozycje (jak jednowyprowadzeniowa magistrala czy wykorzystanie MOSI/MISO) nie pasują do I2C.`,
   },
   {
-    question:
-      "Ze względów bezpieczeństwa administrator sieci musi zagwarantować, że lokalne komputery nie mogą komunikować się ze sobą za pomocą pakietów ping. Które ustawienia pomogą wykonać to zadanie?",
+    question: "4. Jakie są efekty zwiększania rozdzielczości pomiaru temperatury dla czujnika DS18B20 w kontekście czasu odczytu?",
     type: "single",
     answers: [
-      "ustawienia systemu plików",
-      "ustawienia interfejsów",
-      "ustawienia adresów MAC",
-      "ustawienia zapory",
-      "ustawienia AAA",
+      "Czas odczytu się skraca",
+      "Czas odczytu pozostaje bez zmian",
+      "Czas odczytu się wydłuża",
+      "Rozdzielczość nie wpływa na czas odczytu",
     ],
-    correct: 3,
-    explanation:
-      "Ustawienia zapory sieciowej (firewall) pozwalają na kontrolowanie ruchu sieciowego między komputerami. Aby zablokować pakiety ping (ICMP Echo Request i Echo Reply), administrator może skonfigurować reguły zapory, które blokują te typy pakietów. Dzięki temu lokalne komputery nie będą mogły komunikować się ze sobą za pomocą ping, co może pomóc w zapobieganiu pewnym typom ataków lub nieautoryzowanej komunikacji.",
+    // Użytkownik podał, że poprawna odpowiedź to "Zwiększenie rozdzielczości powoduje wydłużenie czasu odczytu" (indeks 2).
+    correct: 2,
+    explanation: `Zwiększenie rozdzielczości (np. z 9 do 12 bitów) oznacza, 
+że czujnik potrzebuje więcej czasu na dokładniejszą konwersję temperatury, 
+co wydłuża czas odczytu. 
+Nie ma tu wątpliwości — tak wynika z dokumentacji DS18B20.`,
   },
   {
-    question:
-      "Użytkownicy sieci są zobowiązani do wprowadzenia poświadczeń nazwy użytkownika i hasła, które zostaną zweryfikowane przez serwer. Który serwer zapewniłby taką usługę?",
-    type: "single",
-    answers: ["AAA", "NAT", "SNMP", "RADIUS", "TACACS+", "802.1X"],
-    correct: 3,
-    explanation:
-      "RADIUS (Remote Authentication Dial-In User Service) to protokół używany do uwierzytelniania, autoryzacji i ewidencji użytkowników, którzy próbują uzyskać dostęp do sieci. Serwer RADIUS weryfikuje poświadczenia użytkowników (nazwę użytkownika i hasło) przed przyznaniem dostępu do zasobów sieciowych. Jest szeroko stosowany w środowiskach korporacyjnych do zarządzania dostępem użytkowników.",
-  },
-  {
-    question:
-      "Jakie korzyści w zakresie bezpieczeństwa daje włączenie BPDU guard na interfejsach obsługujących PortFast?",
+    question: "6. Cechą charakterystyczną urządzeń posługujących się protokołem One-Wire jest?",
     type: "single",
     answers: [
-      "zapobieganie dotarciu obcych przełączników do sieci",
-      "ochrona przed pętlami warstwy 2",
-      "egzekwowanie lokalizacji mostów głównych",
-      "zapobieganie atakom przepełnienia bufora",
-      "Opcja 2",
+      "Mały rozmiar",
+      "Brak cech charakterystycznych",
+      "Czarna obudowa",
+      "Unikalny adres wbudowany w urządzenie",
+      "Potrzeba dodatkowej linii RESET",
     ],
+    // Użytkownik zasugerował, że prawdopodobnie chodzi o unikalny adres (indeks 3).
+    // Moim zdaniem jest to zdecydowanie poprawne: każdy układ One-Wire ma 64-bitowy unikalny identyfikator.
+    correct: 3,
+    explanation: `Użytkownik podał, że odpowiedzią jest "Adres (prawdopodobnie ta odpowiedź)". 
+Moim zdaniem to w 100% trafne: każde urządzenie One-Wire posiada unikalny 64-bitowy adres, 
+co umożliwia podłączanie wielu urządzeń do jednej magistrali. 
+Pozostałe odpowiedzi (mały rozmiar, czarna obudowa czy brak cech) nie są charakterystyczne 
+dla protokołu One-Wire jako takiego.`,
+  },
+  {
+    question: "Jak programowo zmienić jasność świecenia diody?",
+    type: "single",
+    answers: [
+      "Regulując napięcie zasilania diody zewnętrznym potencjometrem",
+      "Zmieniając częstotliwość taktowania mikrokontrolera",
+      "Za pomocą modulacji szerokości impulsu (PWM)",
+      "Nie da się tego zrobić programowo",
+    ],
+    // Użytkownik podał, że poprawną odpowiedzią jest "Za pomocą modulacji szerokości impulsu (PWM)" (indeks 2).
+    correct: 2,
+    explanation: `Zmiana jasności świecenia LED w układach cyfrowych odbywa się 
+poprzez zmianę współczynnika wypełnienia sygnału PWM na pinie sterującym diodą. 
+Pozostałe metody nie dotyczą typowego sterowania jasnością diody z mikrokontrolera.`,
+  },
+  {
+    question: "13. Interfejs 1-Wire pozwala na komunikację wielu urządzeń podrzędnych o ile każde z nich posiada:",
+    type: "single",
+    answers: [
+      "Ten sam adres urządzenia",
+      "Indywidualny adres urządzenia",
+      "Specjalny rejestr rozszerzeń",
+      "Przynajmniej dwie linie zasilania",
+    ],
+    // Użytkownik podał, że poprawna odpowiedź to "Indywidualny adres" (indeks 1).
+    correct: 1,
+    explanation: `Każdy układ 1-Wire posiada unikalny adres (64-bitowy). 
+Dzięki temu można podłączyć wiele urządzeń do jednej linii danych, 
+a master odróżnia je właśnie po adresach.`,
+  },
+  {
+    question: "14. (Rysunek przedstawia linię w stanie niskim) – Jak interpretować ten stan?",
+    type: "single",
+    answers: [
+      "Jest to stan wysoki",
+      "Jest to stan niski",
+      "Jest to stan wysokiej impedancji",
+      "Nie można określić stanu bez dodatkowych informacji",
+    ],
+    // Użytkownik wskazał "stan niski" (indeks 1).
+    correct: 1,
+    explanation: `Z kontekstu pytania wynika, że rysunek pokazuje sygnał przyciągnięty do GND, 
+co oznacza logiczne 0 (stan niski).`,
+  },
+  {
+    question: "20. Do ustalenia dowolnego portu od A0 do A5 jako wejście potrzebne jest polecenie:",
+    type: "single",
+    answers: [
+      "digitalWrite()",
+      "pinMode()",
+      "analogRead()",
+      "Serial.begin()",
+    ],
+    // Użytkownik podał poprawną odpowiedź "pinMode()" (indeks 1).
+    correct: 1,
+    explanation: `W Arduino, aby skonfigurować pin (w tym A0...A5) jako wejście, 
+należy użyć funkcji pinMode(pin, INPUT). 
+Pozostałe funkcje służą do innych celów (digitalWrite – zapis stanu, analogRead – odczyt analogowy itp.).`,
+  },
+  {
+    question: "21. Co to jest współczynnik wypełnienia?",
+    type: "single",
+    answers: [
+      "Różnica między napięciem maksymalnym i minimalnym",
+      "Stosunek napięcia szczytowego do wartości skutecznej",
+      "Stosunek czasu stanu wysokiego do całkowitego okresu sygnału",
+      "Inna nazwa częstotliwości sygnału PWM",
+    ],
+    // Użytkownik podał, że chodzi o stosunek czasu stanu wysokiego do całkowitego okresu sygnału (indeks 2).
+    correct: 2,
+    explanation: `Współczynnik wypełnienia (ang. duty cycle) określa, 
+jaki procent całego okresu sygnału PWM stanowi czas w stanie wysokim. 
+Np. 50% duty cycle oznacza połowę czasu w stanie HIGH i połowę w LOW.`,
+  },
+  {
+    question: "22. Czym jest rozdzielczość w ADC (przetworniku analogowo-cyfrowym)?",
+    type: "single",
+    answers: [
+      "Liczbą bitów określającą maksymalną liczbę poziomów, na które dzielony jest zakres napięć wejściowych",
+      "Stosunkiem częstotliwości próbkowania do zakresu napięcia",
+      "Parametrem określającym maksymalną temperaturę czujnika",
+      "Częstotliwością pracy przetwornika",
+    ],
+    // Użytkownik podał, że poprawną odpowiedzią jest "maksymalna ilość różnych wartości..." (indeks 0).
     correct: 0,
-    explanation:
-      "BPDU Guard jest funkcją zabezpieczeń, która automatycznie wyłącza porty przełącznika, gdy otrzymają one BPDU (Bridge Protocol Data Units). Porty skonfigurowane z PortFast są przeznaczone do podłączania urządzeń końcowych, takich jak komputery czy telefony IP, które nie powinny wysyłać BPDU. Jeśli obcy przełącznik spróbuje wprowadzić BPDU do sieci przez PortFast, BPDU Guard natychmiast wyłączy port, zapobiegając w ten sposób potencjalnym atakom lub nieautoryzowanemu dodaniu przełączników do sieci.",
+    explanation: `Rozdzielczość 8-bit oznacza 256 możliwych wartości (0–255). 
+Rozdzielczość 10-bit to 1024 wartości, itd. 
+Pozostałe definicje nie opisują rozdzielczości ADC.`,
   },
   {
-    question:
-      "Jeśli chodzi o bezpieczeństwo, która warstwa OSI jest uważana za najsłabsze ogniwo w systemie sieciowym?",
+    question: "23. Jaki jest cel używania sekwencji START/STOP w protokole I2C?",
     type: "single",
-    answers: ["warstwa 1", "warstwa 2", "warstwa 3", "warstwa 4", "warstwa 5"],
-    correct: 1,
-    explanation:
-      "Warstwa 2 modelu OSI, czyli warstwa łącza danych, jest często uważana za najsłabsze ogniwo pod względem bezpieczeństwa. Ataki na tę warstwę, takie jak spoofing adresów MAC, ataki ARP czy VLAN hopping, są stosunkowo łatwe do przeprowadzenia i mogą prowadzić do poważnych naruszeń bezpieczeństwa. Ponadto, wiele zabezpieczeń sieciowych koncentruje się na wyższych warstwach, co sprawia, że warstwa 2 jest mniej chroniona i bardziej podatna na ataki.",
-  },
-  {
-    question:
-      "Administrator sieci konfiguruje zabezpieczenia portu na przełączniku. Polityka bezpieczeństwa firmy określa, że w przypadku naruszenia należy odrzucać pakiety o nieznanych adresach źródłowych i nie wysyłać żadnych powiadomień. Który tryb naruszenia powinien być skonfigurowany na interfejsach?",
-    type: "single",
-    answers: ["off", "restrict", "protect", "shutdown"],
+    answers: [
+      "Wprowadzenie urządzeń w stan uśpienia",
+      "Synchronizacja sygnału zegarowego między dwoma masterami",
+      "Rozpoczęcie i zakończenie transmisji danych",
+      "Reset magistrali do ustawień fabrycznych",
+    ],
+    // Użytkownik podał, że poprawną odpowiedzią jest "Rozpoczęcie i zakończenie transmisji danych" (indeks 2).
     correct: 2,
-    explanation:
-      "Tryb 'protect' w zabezpieczeniach portu przełącznika Cisco powoduje, że pakiety z nieznanymi adresami MAC są po prostu odrzucane, bez generowania powiadomień lub logów naruszeń. Jest to zgodne z polityką firmy, która wymaga odrzucania takich pakietów bez informowania administratorów, co może pomóc w uniknięciu nadmiernego logowania lub alertów w przypadku nieautoryzowanych prób dostępu.",
-  },
-  {
-    question:
-      "Administrator sieci konfiguruje DAI na przełączniku za pomocą polecenia `ip arp inspection validate src-mac`. Jaki jest cel tego polecenia konfiguracyjnego?",
-    type: "single",
-    answers: [
-      "Sprawdza źródłowy adres MAC w nagłówku Ethernet z tablicą adresów MAC.",
-      "Sprawdza źródłowy adres MAC w nagłówku Ethernet pod kątem skonfigurowanych przez użytkownika list ACL dla ARP.",
-      "Sprawdza źródłowy adres MAC w nagłówku Ethernet z docelowym adresem MAC w treści ARP.",
-      "Sprawdza źródłowy adres MAC w nagłówku Ethernet z adresem MAC nadawcy w treści ARP.",
-    ],
-    correct: 3,
-    explanation:
-      "Polecenie `ip arp inspection validate src-mac` włącza weryfikację ARP (Dynamic ARP Inspection) poprzez sprawdzenie, czy źródłowy adres MAC w nagłówku Ethernet odpowiada adresowi MAC nadawcy w treści ARP. Jest to mechanizm bezpieczeństwa, który pomaga zapobiegać atakom typu ARP spoofing, gdzie atakujący podszywa się pod inny adres MAC, aby przechwycić ruch sieciowy lub przeprowadzić inne nieautoryzowane działania.",
-  },
-  {
-    question:
-      "Który komponent ma chronić przed nieautoryzowaną komunikacją do i z komputera?",
-    type: "single",
-    answers: [
-      "program antywirusowy",
-      "firewall",
-      "skaner portów",
-      "antymalware",
-      "centrum zabezpieczeń",
-    ],
-    correct: 1,
-    explanation:
-      "Firewall (zapora sieciowa) jest komponentem zabezpieczającym, który kontroluje ruch sieciowy przychodzący i wychodzący na podstawie zestawu reguł bezpieczeństwa. Chroni komputer przed nieautoryzowaną komunikacją, blokując potencjalnie szkodliwe połączenia i pozwalając tylko na dozwolony ruch. Dzięki temu firewall skutecznie zabezpiecza system przed różnymi zagrożeniami zewnętrznymi i ogranicza możliwość nieautoryzowanego dostępu.",
-  },
-  {
-    question:
-      "Które dwa rozwiązania Cisco pomagają zapobiegać atakom zagłodzenia DHCP?",
-    type: "multiple",
-    answers: [
-      "Zabezpieczenie portu",
-      "IP Source Guard",
-      "DHCP Snooping",
-      "Web Security",
-      "Dynamiczna inspekcja ARP",
-    ],
-    correct: [0, 2],
-    explanation:
-      "Ataki zagłodzenia DHCP polegają na wyczerpaniu dostępnych adresów IP w serwerze DHCP poprzez wysyłanie dużej liczby żądań DHCP przez atakującego. 'Zabezpieczenie portu' ogranicza liczbę adresów MAC, które mogą być przypisane do danego portu przełącznika, co ogranicza możliwość wyczerpania adresów IP. 'DHCP Snooping' monitoruje i kontroluje ruch DHCP, tworząc bazę zaufanych portów i blokując nieautoryzowane serwery DHCP, co zapobiega wyczerpaniu puli adresów IP przez atakujących.",
-  },
-  {
-    question:
-      "Jaki plan ograniczania skutków jest najlepszy, aby udaremnić atak DoS, który powoduje przepełnienie tablic adresów MAC?",
-    type: "single",
-    answers: [
-      "Wyłącz DTP.",
-      "Wyłącz VTP.",
-      "Włącz zabezpieczenia portu.",
-      "Wyłącz STP.",
-      "Umieść nieużywane porty w nieużywanej sieci VLAN.",
-      "Włącz BPDU.",
-    ],
-    correct: 2,
-    explanation:
-      "Włączenie zabezpieczeń portu (port security) na przełączniku pozwala na ograniczenie liczby adresów MAC, które mogą być przypisane do danego portu. Dzięki temu można zapobiec przepełnieniu tablic adresów MAC przez atak DoS, gdzie atakujący próbuje wprowadzić dużą liczbę fałszywych adresów MAC do sieci. Zabezpieczenia portu mogą również zablokować port w przypadku wykrycia nieautoryzowanych adresów MAC, co dodatkowo zwiększa ochronę przed tego typu atakami.",
-  },
-  {
-    question:
-      "Spójrz na rysunek. Port Fa0/2 został już prawidłowo skonfigurowany. Telefon IP i komputer PC działają prawidłowo. Która z wymienionych konfiguracji portu Fa0/2 przełącznika będzie najbardziej odpowiednia dla administratora sieci, aby spełnić następujące cele?\n- Nikt nie może odłączyć telefonu IP ani komputera PC lub podłączyć inne przewodowe urządzenia.\n- Jeśli inne urządzenie zostało podłączone, to port Fa0/2 powinien zostać wyłączony.\n- Adresy MAC telefonu IP i komputera powinny zostać automatycznie wykryte przez przełącznik i dodane do bieżącej konfiguracji.",
-    type: "single",
-    image: "q12_picture.png",
-    answers: [
-      "SWA(config-if)# switchport port-security SWA(config-if)# switchport port-security mac-address sticky",
-      "SWA(config-if)# switchport port-security mac-address sticky SWA(config-if)# switchport port-security maximum 2",
-      "SWA(config-if)# switchport port-security SWA(config-if)# switchport port-security maximum 2 SWA(config-if)# switchport port-security mac-address sticky",
-      "SWA(config-if)# switchport port-security SWA(config-if)# switchport port-security maximum 2 SWA(config-if)# switchport port-security mac-address sticky switchport SWA(config-if)# port security violation restrict",
-    ],
-    correct: 3,
-    explanation:
-      "Konfiguracja portu z zabezpieczeniami portu, ustawieniem maksymalnej liczby adresów MAC na 2 oraz trybem naruszenia na 'restrict' zapewnia, że tylko dwa znane urządzenia (telefon IP i komputer PC) mogą korzystać z portu Fa0/2. Opcja 'sticky' pozwala przełącznikowi automatycznie zapamiętać adresy MAC tych urządzeń. Jeśli ktoś podłączy dodatkowe urządzenie, które nie jest na liście, port zostanie ograniczony (zamiast całkowitego wyłączenia), co zgodne jest z polityką bezpieczeństwa firmy.",
-  },
-  {
-    question:
-      "Zabezpieczenie portu zostało skonfigurowane na interfejsie Fa 0/12 przełącznika S1. Jakie działanie nastąpi, gdy PC1 jest dołączony do przełącznika S1 z zastosowaną konfiguracją?",
-    type: "single",
-    image: "q13_picture.png",
-    answers: [
-      "Ramki z PC1 zostaną usunięte i zostanie utworzony komunikat dziennika.",
-      "Ramki z PC1 zostaną odrzucone i nie będzie żadnego dziennika naruszenia.",
-      "Ramki z PC1 spowodują natychmiastowe zamknięcie interfejsu i zostanie wprowadzony wpis dziennika.",
-      "Ramki z PC1 zostaną przekazane do miejsca docelowego i zostanie utworzony wpis dziennika.",
-      "Ramki z PC1 zostaną przekazane do miejsca docelowego, ale wpis dziennika nie zostanie utworzony.",
-      "Ramki z PC1 zostaną przesłane dalej, ponieważ brakuje polecenia switchport port-security violation.",
-    ],
-    correct: 2,
-    explanation:
-      "Gdy zabezpieczenia portu są skonfigurowane na interfejsie, a do portu podłączony zostanie nieautoryzowany adres MAC (np. PC1, jeśli nie jest na liście dozwolonych adresów), przełącznik natychmiast wyłączy interfejs (port) i wygeneruje wpis w dzienniku zdarzeń. To działanie zabezpiecza sieć przed potencjalnymi atakami, blokując port, na którym wykryto naruszenie bezpieczeństwa.",
-  },
-  {
-    question: "Które trzy usługi świadczone są w ramach AAA?",
-    type: "multiple",
-    answers: [
-      "ewidencjonowanie",
-      "niezawodność",
-      "autoryzacja",
-      "integralność danych",
-      "uwierzytelnianie",
-    ],
-    correct: [0, 2, 4],
-    explanation:
-      "Model AAA obejmuje trzy główne usługi: Ewidencjonowanie (Accounting) rejestruje działania użytkowników, Autoryzacja (Authorization) określa, do jakich zasobów użytkownik ma dostęp, oraz Uwierzytelnianie (Authentication) weryfikuje tożsamość użytkownika. Te trzy komponenty razem zapewniają kompleksowe zarządzanie dostępem i bezpieczeństwem w sieciach komputerowych.",
-  },
-  {
-    question:
-      "Która usługa jest domyślnie włączona na przełączniku, a która może ujawnić znaczące informacje o routerze i potencjalnie uczynić go bardziej podatnym na ataki?",
-    type: "single",
-    answers: ["FTP", "LLDP", "HTTP", "TFTP", "CDP", "NLDP"],
-    correct: 4,
-    explanation:
-      "CDP (Cisco Discovery Protocol) jest domyślnie włączoną usługą na przełącznikach Cisco, która umożliwia urządzeniom sieciowym wymianę informacji o sobie, takich jak nazwa urządzenia, adres IP, typ interfejsów itp. Chociaż jest użyteczna do zarządzania siecią, CDP może ujawniać szczegółowe informacje o urządzeniach, co potencjalnie może być wykorzystane przez atakujących do planowania ataków na infrastrukturę sieciową.",
-  },
-  {
-    question:
-      "Który atak warstwy 2 spowoduje, że uprawnieni użytkownicy nie otrzymają prawidłowych adresów IP?",
-    type: "single",
-    answers: [
-      "fałszowanie adresów IP",
-      "fałszowanie ARP",
-      "fałszowanie adresów MAC",
-      "zalewanie adresami MAC",
-      "zagłodzenie DHCP",
-    ],
-    correct: 4,
-    explanation:
-      "Atak zagłodzenia DHCP polega na wyczerpaniu dostępnych adresów IP na serwerze DHCP poprzez wysyłanie dużej liczby fałszywych żądań DHCP przez atakującego. W rezultacie uprawnieni użytkownicy nie będą w stanie otrzymać prawidłowych adresów IP, co uniemożliwi im dostęp do sieci. Mechanizmy takie jak DHCP Snooping mogą pomóc w ochronie przed tego typu atakami.",
-  },
-  {
-    question:
-      "Jaki może być cel ewidencjonowania jako funkcji bezpieczeństwa sieciowego?",
-    type: "single",
-    answers: [
-      "do śledzenia działań użytkownika",
-      "do śledzenia działań aplikacji",
-      "wymaga od użytkowników aby udowodnili, że są tymi za których się podają",
-      "do dostarczania funkcjonalności zapytań i odpowiedzi",
-      "do określenia, do których zasobów użytkownicy mają mieć dostęp",
-    ],
-    correct: 0,
-    explanation:
-      "Ewidencjonowanie (Accounting) w modelu AAA służy do rejestrowania działań użytkowników w sieci. Dzięki temu administratorzy mogą śledzić, kto i kiedy korzystał z określonych zasobów, co jest kluczowe dla audytów bezpieczeństwa, wykrywania nadużyć oraz monitorowania aktywności sieciowej. Ewidencjonowanie pomaga w identyfikacji potencjalnych zagrożeń i zapewnia podstawę do analizowania incydentów bezpieczeństwa.",
-  },
-  {
-    question:
-      "Jakie trzy kroki konfiguracyjne muszą być wykonane, aby wdrożyć dostęp SSH do routera?",
-    type: "multiple",
-    answers: [
-      "ustawić unikalne hasło",
-      "ustawić unikalną nazwę hosta",
-      "ustawić nazwę domeny IP",
-      "dodać konto użytkownika",
-      "ustawić hasło trybu uprzywilejowanego",
-      "ustawić hasło na linii konsoli",
-    ],
-    correct: [1, 2, 3],
-    explanation:
-      "Aby wdrożyć dostęp SSH do routera, należy wykonać kilka kroków konfiguracyjnych: 1) Ustawić unikalną nazwę hosta, co jest wymagane do generowania kluczy SSH; 2) Ustawić nazwę domeny IP, która jest również potrzebna do generowania kluczy SSH; 3) Dodać konto użytkownika, które będzie używane do uwierzytelniania się przez SSH. Te kroki są niezbędne do skonfigurowania bezpiecznego dostępu zdalnego do urządzenia.",
-  },
-  {
-    question: "Jakie są trzy techniki ograniczania ataków VLAN?",
-    type: "multiple",
-    answers: [
-      "Wyłącz DTP.",
-      "Włącz trunk ręcznie.",
-      "Zmień VLAN natywny na nieużywany.",
-      "Włącz BPDU guard.",
-      "Włącz Source Guard.",
-      "Użyj przypisanych sieci VLAN.",
-    ],
-    correct: [0, 1, 2],
-    explanation:
-      "Aby ograniczyć ataki VLAN, można zastosować następujące techniki: 1) Wyłączenie DTP (Dynamic Trunking Protocol) zapobiega automatycznemu negocjowaniu trunków, co utrudnia atakującym wprowadzenie fałszywych trunków do sieci; 2) Ręczne włączenie trunków (zamiast dynamicznego) zapewnia większą kontrolę nad tym, które porty mogą tworzyć trunki, co zmniejsza ryzyko nieautoryzowanych połączeń; 3) Zmiana VLAN natywnego na nieużywany pomaga w zapobieganiu atakom typu VLAN hopping, gdzie atakujący próbuje przesłać ruch do nieautoryzowanych VLANów poprzez modyfikację tagów VLAN.",
-  },
-  {
-    question:
-      "Jakiemu rodzajowi ataku z przeskokiem VLAN można zapobiec, wyznaczając nieużywaną sieć VLAN jako natywną sieć VLAN?",
-    type: "single",
-    answers: [
-      "fałszowanie DTP",
-      "fałszowanie DHCP",
-      "podwójne znakowanie VLAN",
-      "zagłodzenie DHCP",
-    ],
-    correct: 2,
-    explanation:
-      "Atak podwójnego znakowania VLAN (Double VLAN Tagging) polega na dodawaniu dwóch tagów VLAN do ramki Ethernet, co pozwala na przesyłanie ruchu do nieautoryzowanych VLANów. Poprzez wyznaczenie nieużywanej sieci VLAN jako natywnej VLAN, można zmniejszyć ryzyko tego typu ataku, ponieważ przełączniki będą oczekiwać tagów zgodnych z konfiguracją, a nieużywana VLAN nie będzie miała aktywnych portów, które mogłyby zostać wykorzystane do podszywania się pod inne VLANy.",
+    explanation: `Sekwencje START i STOP na SDA (przy SCL wysokim) sygnalizują początek i koniec transmisji na magistrali I2C. 
+Dzięki nim slave’y wiedzą, kiedy odczytywać adres i dane, a kiedy transmisja się zakończyła.`,
   },
 ];
+
