@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Cache-Control"
+      content="no-cache, no-store, must-revalidate"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>IOT</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #121212;
+        color: #e0e0e0;
+      }
+
+      .question {
+        margin-bottom: 20px;
+        padding: 15px;
+        border: 1px solid #333;
+        border-radius: 5px;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+        background-color: #1e1e1e;
+      }
+
+      .correct {
+        color: #4caf50;
+      }
+
+      .incorrect {
+        color: #f44336;
+      }
+
+      .selected {
+        font-weight: bold;
+      }
+
+      #result {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 10px 20px;
+        background-color: #333;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        font-weight: bold;
+        color: #e0e0e0;
+      }
+
+      label {
+        display: flex;
+        align-items: center;
+        margin: 10px 0;
+        cursor: pointer;
+      }
+
+      label.answered {
+        cursor: not-allowed !important;
+      }
+
+      label.answered input[type="radio"] {
+        pointer-events: none;
+      }
+
+      input[type="radio"],
+      input[type="checkbox"] {
+        margin-right: 10px;
+        min-width: 20px;
+        accent-color: #ff9800;
+      }
+
+      .answer {
+        display: inline-block;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #ff9800;
+      }
+
+      ::-webkit-scrollbar {
+        width: 12px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: #1e1e1e;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background-color: #555;
+        border-radius: 6px;
+        border: 3px solid #1e1e1e;
+      }
+
+      .explanation {
+        margin-top: 10px;
+        padding: 10px;
+        background-color: #2a2a2a;
+        border-left: 4px solid #ff9800;
+        display: none;
+      }
+
+      .submit-button {
+        background-color: #ff9800;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-top: 10px;
+      }
+
+      .submit-button:hover {
+        background-color: #f57c00;
+      }
+
+      input[type="checkbox"]:disabled {
+        cursor: not-allowed;
+        opacity: 0.8;
+      }
+
+      input[type="checkbox"]:disabled + .answer {
+        opacity: 0.7;
+      }
+
+      .submit-button:disabled {
+        background-color: #666;
+        cursor: not-allowed;
+      }
+
+      .question img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: 10px 0;
+        border: 1px solid #444;
+        border-radius: 5px;
+      }
+
+      .question ul {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        padding-left: 20px;
+      }
+
+      .question li {
+        margin-bottom: 5px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Sieci</h1>
+    <div id="result"></div>
+    <div id="quizContainer"></div>
+    <script src="iot_pytania.js"></script>
+
+    <script>
+      const quizContainer = document.getElementById("quizContainer");
+      let userAnswers = [];
+      let questionAnswered = [];
+
+      function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+      }
+
+      function deepCopyQuestions(questions) {
+        return questions.map((q) => ({
+          ...q,
+          answers: [...q.answers],
+          correct: Array.isArray(q.correct) ? [...q.correct] : q.correct,
+        }));
+      }
+
+      const shuffledQuestions = shuffleArray(deepCopyQuestions(questions));
+      userAnswers = shuffledQuestions.map((q) =>
+        q.type === "multiple" ? [] : null
+      );
+      questionAnswered = new Array(shuffledQuestions.length).fill(false);
+
+      document.getElementById(
+        "result"
+      ).textContent = `Wynik: 0 / ${shuffledQuestions.length}`;
+
+      shuffledQuestions.forEach((q, qIndex) => {
+        if (q.type === "single") {
+          const correctAnswerText = q.answers[q.correct];
+          shuffleArray(q.answers);
+          q.correct = q.answers.findIndex(
+            (answer) => answer === correctAnswerText
+          );
+        } else if (q.type === "multiple") {
+          const correctAnswersText = q.correct.map((i) => q.answers[i]);
+          shuffleArray(q.answers);
+          q.correct = correctAnswersText.map((text) =>
+            q.answers.findIndex((answer) => answer === text)
+          );
+        }
+      });
+
+      function arraysEqual(a, b) {
+        if (a.length !== b.length) return false;
+        const sortedA = [...a].sort();
+        const sortedB = [...b].sort();
+        return sortedA.every((val, idx) => val === sortedB[idx]);
+      }
+
+      function updateScore() {
+        const score = userAnswers.reduce((acc, answer, index) => {
+          if (shuffledQuestions[index].type === "single") {
+            return acc + (answer === shuffledQuestions[index].correct ? 1 : 0);
+          } else {
+            return (
+              acc +
+              (arraysEqual(answer, shuffledQuestions[index].correct) ? 1 : 0)
+            );
+          }
+        }, 0);
+        document.getElementById(
+          "result"
+        ).textContent = `Wynik: ${score} / ${shuffledQuestions.length}`;
+      }
+
+      function handleSingleAnswerSelection(
+        questionIndex,
+        selectedAnswer,
+        input
+      ) {
+        if (questionAnswered[questionIndex]) {
+          input.checked = userAnswers[questionIndex] === selectedAnswer;
+          return;
+        }
+
+        userAnswers[questionIndex] = selectedAnswer;
+        questionAnswered[questionIndex] = true;
+        updateScore();
+
+        const questionDiv = document.querySelector(
+          `[data-question="${questionIndex}"]`
+        );
+        const answerElements = questionDiv.querySelectorAll(".answer");
+        const explanationDiv = questionDiv.querySelector(".explanation");
+        const labels = questionDiv.querySelectorAll("label");
+
+        labels.forEach((label) => label.classList.add("answered"));
+
+        answerElements.forEach((answerElement, index) => {
+          answerElement.classList.remove("correct", "incorrect", "selected");
+          if (index === shuffledQuestions[questionIndex].correct) {
+            answerElement.classList.add("correct");
+          }
+          if (index === selectedAnswer) {
+            answerElement.classList.add("selected");
+            if (index !== shuffledQuestions[questionIndex].correct) {
+              answerElement.classList.add("incorrect");
+            }
+          }
+        });
+
+        explanationDiv.textContent =
+          shuffledQuestions[questionIndex].explanation;
+        explanationDiv.style.display = "block";
+      }
+
+      function handleMultipleAnswerSubmit(questionIndex) {
+        if (questionAnswered[questionIndex]) return;
+
+        const questionDiv = document.querySelector(
+          `[data-question="${questionIndex}"]`
+        );
+        const checkboxes = questionDiv.querySelectorAll(
+          'input[type="checkbox"]'
+        );
+        const selectedAnswers = Array.from(checkboxes)
+          .map((checkbox, index) => (checkbox.checked ? index : null))
+          .filter((index) => index !== null);
+
+        userAnswers[questionIndex] = selectedAnswers;
+        questionAnswered[questionIndex] = true;
+        updateScore();
+
+        const answerElements = questionDiv.querySelectorAll(".answer");
+        const explanationDiv = questionDiv.querySelector(".explanation");
+        const correctAnswers = shuffledQuestions[questionIndex].correct;
+        const submitButton = questionDiv.querySelector(".submit-button");
+        const labels = questionDiv.querySelectorAll("label");
+
+        checkboxes.forEach((checkbox) => (checkbox.disabled = true));
+        labels.forEach((label) => label.classList.add("answered"));
+        submitButton.disabled = true;
+
+        answerElements.forEach((answerElement, index) => {
+          answerElement.classList.remove("correct", "incorrect", "selected");
+          if (correctAnswers.includes(index)) {
+            answerElement.classList.add("correct");
+          }
+          if (selectedAnswers.includes(index)) {
+            answerElement.classList.add("selected");
+            if (!correctAnswers.includes(index)) {
+              answerElement.classList.add("incorrect");
+            }
+          }
+        });
+
+        explanationDiv.textContent =
+          shuffledQuestions[questionIndex].explanation;
+        explanationDiv.style.display = "block";
+      }
+
+      function formatQuestion(question, image) {
+        const lines = question.split("\n");
+        let html = "";
+
+        if (image) {
+          html += `<img src="${image}" alt="Ilustracja do pytania">`;
+        }
+
+        let inList = false;
+        lines.forEach((line) => {
+          if (line.startsWith("- ")) {
+            if (!inList) {
+              html += "<ul>";
+              inList = true;
+            }
+            html += `<li>${line.substring(2)}</li>`;
+          } else {
+            if (inList) {
+              html += "</ul>";
+              inList = false;
+            }
+            if (line.trim() !== "") {
+              html += `<p>${line}</p>`;
+            }
+          }
+        });
+        if (inList) {
+          html += "</ul>";
+        }
+        return html;
+      }
+
+      function generateQuiz() {
+        shuffledQuestions.forEach((q, index) => {
+          const questionDiv = document.createElement("div");
+          questionDiv.classList.add("question");
+          questionDiv.setAttribute("data-question", index);
+
+          const questionTitle = document.createElement("div");
+          questionTitle.innerHTML = `<strong>${
+            index + 1
+          }.</strong> ${formatQuestion(q.question, q.image)}`;
+          questionDiv.appendChild(questionTitle);
+
+          q.answers.forEach((answer, i) => {
+            const answerDiv = document.createElement("div");
+            answerDiv.classList.add("answer");
+            answerDiv.textContent = `${answer}`;
+
+            const label = document.createElement("label");
+            const input = document.createElement("input");
+            input.type = q.type === "single" ? "radio" : "checkbox";
+            input.name = `q${index}`;
+            input.value = i;
+
+            if (q.type === "single") {
+              input.addEventListener("change", () =>
+                handleSingleAnswerSelection(index, i, input)
+              );
+              input.addEventListener("click", (e) => {
+                if (questionAnswered[index] && userAnswers[index] !== i) {
+                  e.preventDefault();
+                }
+              });
+            }
+
+            label.appendChild(input);
+            label.appendChild(answerDiv);
+            questionDiv.appendChild(label);
+          });
+
+          if (q.type === "multiple") {
+            const submitButton = document.createElement("button");
+            submitButton.textContent = "Odpowiedz";
+            submitButton.classList.add("submit-button");
+            submitButton.addEventListener("click", () =>
+              handleMultipleAnswerSubmit(index)
+            );
+            questionDiv.appendChild(submitButton);
+          }
+
+          const explanationDiv = document.createElement("div");
+          explanationDiv.classList.add("explanation");
+          questionDiv.appendChild(explanationDiv);
+
+          quizContainer.appendChild(questionDiv);
+        });
+      }
+
+      generateQuiz();
+    </script>
+  </body>
+</html>
