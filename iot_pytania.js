@@ -3,7 +3,7 @@
 const questions = [
   {
     question: "Jaki jest stan na pinie D8 jeżeli oba przyciski są wciśnięte?",
-    type: "multiple",
+    type: "single",
     answers: [
       "Niski", // (od Autora)
       "Wysoki",
