@@ -880,7 +880,7 @@ Pozostałe odpowiedzi nie odnoszą się do przyznawania uprawnień:
 - "uwierzytelnianie" sprawdza tożsamość, ale nie zarządza zakresem uprawnień po zalogowaniu.`,
   },
   {
-    question: "2. Ile linii danych używa interfejs I2C?",
+    question: "Ile linii danych używa interfejs I2C?",
     type: "single",
     answers: [
       "Jedna (SDA)",
@@ -896,7 +896,7 @@ Pozostałe propozycje (jak jednowyprowadzeniowa magistrala czy wykorzystanie MOS
   },
   {
     question:
-      "4. Jakie są efekty zwiększania rozdzielczości pomiaru temperatury dla czujnika DS18B20 w kontekście czasu odczytu?",
+      "Jakie są efekty zwiększania rozdzielczości pomiaru temperatury dla czujnika DS18B20 w kontekście czasu odczytu?",
     type: "single",
     answers: [
       "Czas odczytu się skraca",
@@ -913,7 +913,7 @@ Nie ma tu wątpliwości — tak wynika z dokumentacji DS18B20.`,
   },
   {
     question:
-      "6. Cechą charakterystyczną urządzeń posługujących się protokołem One-Wire jest?",
+      "Cechą charakterystyczną urządzeń posługujących się protokołem One-Wire jest?",
     type: "single",
     answers: [
       "Mały rozmiar",
@@ -948,7 +948,7 @@ Pozostałe metody nie dotyczą typowego sterowania jasnością diody z mikrokont
   },
   {
     question:
-      "13. Interfejs 1-Wire pozwala na komunikację wielu urządzeń podrzędnych o ile każde z nich posiada:",
+      "Interfejs 1-Wire pozwala na komunikację wielu urządzeń podrzędnych o ile każde z nich posiada:",
     type: "single",
     answers: [
       "Ten sam adres urządzenia",
@@ -964,7 +964,7 @@ a master odróżnia je właśnie po adresach.`,
   },
   {
     question:
-      "14. (Rysunek przedstawia linię w stanie niskim) – Jak interpretować ten stan?",
+      "(Rysunek przedstawia linię w stanie niskim) – Jak interpretować ten stan?",
     type: "single",
     answers: [
       "Jest to stan wysoki",
@@ -979,7 +979,7 @@ co oznacza logiczne 0 (stan niski).`,
   },
   {
     question:
-      "20. Do ustalenia dowolnego portu od A0 do A5 jako wejście potrzebne jest polecenie:",
+      "Do ustalenia dowolnego portu od A0 do A5 jako wejście potrzebne jest polecenie:",
     type: "single",
     answers: ["digitalWrite()", "pinMode()", "analogRead()", "Serial.begin()"],
     // Użytkownik podał poprawną odpowiedź "pinMode()" (indeks 1).
@@ -989,7 +989,7 @@ należy użyć funkcji pinMode(pin, INPUT).
 Pozostałe funkcje służą do innych celów (digitalWrite – zapis stanu, analogRead – odczyt analogowy itp.).`,
   },
   {
-    question: "21. Co to jest współczynnik wypełnienia?",
+    question: "Co to jest współczynnik wypełnienia?",
     type: "single",
     answers: [
       "Różnica między napięciem maksymalnym i minimalnym",
@@ -1005,7 +1005,7 @@ Np. 50% duty cycle oznacza połowę czasu w stanie HIGH i połowę w LOW.`,
   },
   {
     question:
-      "22. Czym jest rozdzielczość w ADC (przetworniku analogowo-cyfrowym)?",
+      "Czym jest rozdzielczość w ADC (przetworniku analogowo-cyfrowym)?",
     type: "single",
     answers: [
       "Liczbą bitów określającą maksymalną liczbę poziomów, na które dzielony jest zakres napięć wejściowych",
@@ -1021,7 +1021,7 @@ Pozostałe definicje nie opisują rozdzielczości ADC.`,
   },
   {
     question:
-      "23. Jaki jest cel używania sekwencji START/STOP w protokole I2C?",
+      "Jaki jest cel używania sekwencji START/STOP w protokole I2C?",
     type: "single",
     answers: [
       "Wprowadzenie urządzeń w stan uśpienia",
