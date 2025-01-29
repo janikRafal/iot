@@ -13,7 +13,7 @@ const questions = [
     correct: [0],
     explanation:
       "Po wciśnięciu obu przycisków linia zostaje zwarta do masy, więc pin D8 przyjmuje stan niski (LOW).",
-    images: "1.png",
+    image: "1.png",
   },
   {
     question: "Jaki jest stan na pinie D8 jeżeli przycisk_1 jest wciśnięty?",
@@ -27,7 +27,7 @@ const questions = [
     correct: 1, // Autor podał, że poprawna to "wysoki"
     explanation:
       "Otrzymana od Ciebie odpowiedź wskazuje stan wysoki (HIGH) jako poprawny. Natomiast, patrząc na sam schemat, wciśnięcie przycisku_1 zwiera pin D8 do masy przez rezystor R1 podciągnięty do +5V, co w praktyce powinno dać stan niski (LOW). Moim zdaniem więc fizycznie byłby to stan niski, jednak zgodnie z Twoimi wytycznymi ustawiamy jako 'poprawną' odpowiedź to, co podałeś, tj. 'wysoki'.",
-    images: "2.png",
+    image: "2.png",
   },
   {
     question: "Jakie są podstawowe cechy interfejsu I2C?",
