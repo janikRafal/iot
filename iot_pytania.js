@@ -166,14 +166,6 @@ const questions = [
       "W Arduino funkcja setup() wywoływana jest jeden raz po starcie/ resecie układu.",
   },
   {
-    // brak pytania nr 11 w oryginalnym zestawieniu
-    question: "Pytanie nr 11 nie zostało udostępnione.",
-    type: "single",
-    answers: ["Brak danych"],
-    correct: 0,
-    explanation: "Nie ma pytania 11 w oryginalnej liście.",
-  },
-  {
     question: "Jakie są możliwe stany dla pinów cyfrowych na mikrokontrolerze?",
     type: "single",
     answers: [
@@ -198,14 +190,6 @@ const questions = [
     correct: 0,
     explanation:
       "W materiałach może występować wartość 2,1 Mb/s jako przykładowa gwarantowana prędkość. W praktyce SPI może osiągać znacznie wyższe przepływności, ale w quizie przyjmujemy odpowiedź podaną przez Ciebie.",
-  },
-  {
-    // brak pytania nr 14 w oryginalnym zestawieniu
-    question: "Pytanie nr 14 nie zostało udostępnione.",
-    type: "single",
-    answers: ["Brak danych"],
-    correct: 0,
-    explanation: "Nie ma pytania 14 w oryginalnej liście.",
   },
   {
     question: "Jakie są podstawowe elementy ramki w protokole I2C?",
@@ -273,14 +257,6 @@ const questions = [
     correct: 2,
     explanation:
       "W I2C Master generuje sygnał zegarowy i inicjuje transmisję, a Slave odpowiada na żądania Mastera.",
-  },
-  {
-    // brak pytania nr 20 w oryginalnym zestawieniu
-    question: "Pytanie nr 20 nie zostało udostępnione.",
-    type: "single",
-    answers: ["Brak danych"],
-    correct: 0,
-    explanation: "Nie ma pytania 20 w oryginalnej liście.",
   },
   {
     question:
@@ -513,7 +489,7 @@ const questions = [
       "RISC odnosi się do zestawu instrukcji (Reduced Instruction Set Computer) i może być implementowany zarówno w architekturze von Neumanna, jak i Harvard",
   },
   {
-    question: "Czy interfejs komunikacyjny 1-Wire jest interfejsem:",
+    question: "Interfejs komunikacyjny 1-Wire jest interfejsem:",
     type: "single",
     answers: [
       "Równoległym",
@@ -552,7 +528,7 @@ const questions = [
       "ROM (Read-Only Memory) jest pamięcią nieulotną, więc dane nie znikają po odłączeniu zasilania.",
   },
   {
-    question: "Czy fotorezystor:",
+    question: "Fotorezystor:",
     type: "single",
     answers: [
       "Zwiększa przepływ prądu stałego przy wzroście napięcia",
@@ -578,7 +554,7 @@ const questions = [
       "Architekturę AVR opracowała firma Atmel (obecnie przejęta przez Microchip).",
   },
   {
-    question: "Czy mikrokontrolery ARM charakteryzują się architekturą typu:",
+    question: "Mikrokontrolery ARM charakteryzują się architekturą typu:",
     type: "single",
     answers: [
       "CISC",
@@ -645,7 +621,7 @@ const questions = [
   },
   {
     question:
-      "Czy stosowana w mikrokontrolerach transmisja szeregowa UART jest:",
+      "Stosowana w mikrokontrolerach transmisja szeregowa UART jest:",
     type: "single",
     answers: [
       "Synchroniczna",
@@ -723,7 +699,7 @@ const questions = [
     explanation: "Termistor to rezystor zależny od temperatury (NTC lub PTC).",
   },
   {
-    question: "Czy interfejs komunikacyjny I2C jest interfejsem:",
+    question: "Interfejs komunikacyjny I2C jest interfejsem:",
     type: "single",
     answers: [
       "Równoległym",
@@ -817,7 +793,7 @@ const questions = [
       "Tak. Czujniki parametryczne zmieniają pewien parametr sygnału elektrycznego w odpowiedzi na mierzony wielkości.",
   },
   {
-    question: "Czy przekaźnik to:",
+    question: "Przekaźnik to:",
     type: "single",
     answers: [
       "Czujnik temperatury",
@@ -964,7 +940,7 @@ a master odróżnia je właśnie po adresach.`,
   },
   {
     question:
-      "(Rysunek przedstawia linię w stanie niskim) – Jak interpretować ten stan?",
+      "Jak interpretować ten stan?",
     type: "single",
     answers: [
       "Jest to stan wysoki",
